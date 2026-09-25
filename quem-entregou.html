@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quem entregou — LAWD UFS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%236a18e0'/><text x='16' y='21' font-size='11' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'>LAWD</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@300;400;500;600;700&family=Saira:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+@font-face{font-family:"Makina";src:local("29LT Makina Regular"),local("29LTMakina-Regular"),local("29LT Makina");font-weight:400;font-display:swap}
+@font-face{font-family:"Makina";src:local("29LT Makina Medium"),local("29LTMakina-Medium");font-weight:500;font-display:swap}
+
+/* ---------- tokens (mesmos do material LAWD) ---------- */
+:root{
+  --bg:#ffffff; --fg:#000000; --suave:#4a4356; --superficie:#f3edfe;
+  --linha:rgba(20,0,48,.16); --acento:#6a18e0; --acento-forte:#5310b8;
+  --sobre-acento:#ffffff; --ok:#00a874; --erro:#d0244f;
+  --humana:"MuseoModerno", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --maquina:"Makina", "Saira", ui-sans-serif, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#000000; --fg:#ffffff; --suave:#a897c4; --superficie:#150827;
+    --linha:rgba(255,255,255,.18); --acento:#8b3bff; --acento-forte:#a06bff;
+    --ok:#00d18f; --erro:#ff6b8f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --fg:#ffffff; --suave:#a897c4; --superficie:#150827;
+  --linha:rgba(255,255,255,.18); --acento:#8b3bff; --acento-forte:#a06bff;
+  --ok:#00d18f; --erro:#ff6b8f;
+}
+
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:var(--humana);font-weight:400;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.folha{max-width:44rem;margin:0 auto;padding:0 1rem 4rem}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acento-forte);outline-offset:3px;border-radius:2px}
+a{color:var(--acento);text-underline-offset:3px}
+
+/* ---------- topo ---------- */
+.topo{display:flex;align-items:center;gap:.6rem;padding:1.4rem 0 2.6rem}
+.marca{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--acento);color:var(--sobre-acento);text-decoration:none;
+  font-weight:700;font-size:.95rem;letter-spacing:.06em;
+  padding:.3rem .55rem .35rem;border-radius:.3rem;
+}
+.topo p{margin:0;font-family:var(--maquina);font-size:.76rem;line-height:1.3;color:var(--suave)}
+.topo .voltar{margin-left:auto;font-family:var(--maquina);font-size:.8rem}
+
+h1{
+  font-weight:600;font-size:clamp(2rem,9vw,2.7rem);line-height:1.02;
+  letter-spacing:-.02em;margin:0 0 1rem;
+}
+.abertura p{margin:0 0 2rem;font-size:1.05rem;color:var(--suave);max-width:36ch}
+
+/* ---------- seletor de semana ---------- */
+.campo{display:grid;grid-template-columns:minmax(0,1fr);gap:.4rem;margin-bottom:1.4rem}
+.campo > label{font-weight:500;font-size:1rem}
+.caixa{
+  position:relative;display:flex;align-items:center;
+  background:var(--superficie);border:1px solid var(--linha);
+  border-radius:.75rem;padding:0 .85rem;min-height:3rem;
+}
+.caixa:focus-within{border-color:var(--acento);box-shadow:0 0 0 1px var(--acento)}
+.caixa select{
+  flex:1 1 auto;min-width:0;background:none;border:0;padding:.7rem 1.4rem .7rem 0;
+  font-size:1rem;appearance:none;-webkit-appearance:none;cursor:pointer;
+  width:100%;text-overflow:ellipsis;
+}
+.caixa select:focus{outline:none}
+.caixa select option{background:var(--bg);color:var(--fg)}
+.caixa::after{
+  content:"";position:absolute;right:1rem;top:50%;width:.45rem;height:.45rem;
+  border-right:2px solid var(--suave);border-bottom:2px solid var(--suave);
+  transform:translateY(-70%) rotate(45deg);pointer-events:none;
+}
+.entrega{
+  margin:.25rem 0 0;border-left:2px solid var(--acento);
+  padding:.15rem 0 .15rem .75rem;font-size:.88rem;color:var(--suave);
+}
+.entrega b{color:var(--fg);font-weight:600}
+
+/* ---------- resumo ---------- */
+.resumo{
+  display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  border-bottom:1px solid var(--linha);padding-bottom:.6rem;margin-bottom:.2rem;
+}
+.resumo strong{font-weight:600;font-size:1.6rem;line-height:1;font-variant-numeric:tabular-nums}
+.resumo span{font-family:var(--maquina);font-size:.76rem;color:var(--suave)}
+.resumo .contagem span{margin-left:.35rem;font-family:var(--humana);font-size:1rem;color:var(--fg)}
+
+/* ---------- tabela ---------- */
+table{width:100%;border-collapse:collapse}
+th{
+  text-align:left;font-family:var(--maquina);font-weight:500;font-size:.72rem;
+  color:var(--suave);text-transform:uppercase;letter-spacing:.06em;
+  padding:.7rem .5rem .5rem;border-bottom:1px solid var(--linha);
+}
+td{padding:.7rem .5rem;border-bottom:1px solid var(--linha);vertical-align:middle}
+th:first-child,td:first-child{padding-left:0}
+th:last-child,td:last-child{padding-right:0}
+.num{width:2rem;font-family:var(--maquina);font-size:.78rem;color:var(--suave);font-variant-numeric:tabular-nums}
+.aluno{display:flex;align-items:center;gap:.65rem;min-width:0}
+.aluno img{width:2rem;height:2rem;border-radius:50%;flex:0 0 auto;background:var(--linha);object-fit:cover}
+.aluno div{min-width:0}
+.aluno b{display:block;font-weight:500;line-height:1.25;overflow-wrap:anywhere}
+.aluno a{font-family:var(--maquina);font-size:.8rem}
+.repo a{font-family:var(--maquina);font-size:.85rem;overflow-wrap:anywhere}
+.quando{display:block;font-family:var(--maquina);font-size:.74rem;color:var(--suave);margin-top:.15rem}
+
+.vazio,.falha{
+  margin:1.4rem 0 0;padding:1rem;border:1px dashed var(--linha);border-radius:.75rem;
+  color:var(--suave);font-size:.95rem;
+}
+.falha{border-style:solid;border-color:var(--erro);color:var(--fg)}
+.falha button{
+  margin-top:.7rem;cursor:pointer;background:none;border:1px solid var(--acento);color:var(--acento);
+  font-weight:500;font-size:.9rem;padding:.45rem .9rem;border-radius:.6rem;
+}
+[hidden]{display:none!important}
+
+.carregando td{padding:.9rem 0}
+.barra{height:.8rem;border-radius:.3rem;background:var(--superficie);animation:pulso 1.2s ease-in-out infinite}
+@keyframes pulso{50%{opacity:.5}}
+
+@media (max-width:30rem){
+  .num{display:none}
+  td.repo{text-align:right}
+  th.repo{text-align:right}
+}
+
+.rodape{margin-top:2.5rem;font-family:var(--maquina);font-size:.72rem;color:var(--suave);line-height:1.6}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="folha">
+
+  <header class="topo">
+    <a class="marca" href="index.html">LAWD</a>
+    <p>Liga Acadêmica de<br>Desenvolvimento Web</p>
+    <a class="voltar" href="index.html">Enviar entrega →</a>
+  </header>
+
+  <section class="abertura">
+    <h1>Quem entregou</h1>
+    <p>Escolha uma semana para ver quem já enviou a atividade e o link do repositório de cada pessoa.</p>
+  </section>
+
+  <div class="campo">
+    <label for="semana">Semana</label>
+    <div class="caixa"><select id="semana"></select></div>
+    <p class="entrega" id="entrega"></p>
+  </div>
+
+  <div class="resumo" aria-live="polite">
+    <p class="contagem" style="margin:0"><strong id="total">–</strong><span id="total-rotulo">entregas</span></p>
+    <span id="atualizado">carregando…</span>
+  </div>
+
+  <table id="tabela">
+    <thead>
+      <tr><th class="num" scope="col">#</th><th scope="col">Aluno</th><th class="repo" scope="col">Repositório</th></tr>
+    </thead>
+    <tbody id="linhas">
+      <tr class="carregando"><td colspan="3"><div class="barra"></div></td></tr>
+      <tr class="carregando"><td colspan="3"><div class="barra" style="width:80%"></div></td></tr>
+      <tr class="carregando"><td colspan="3"><div class="barra" style="width:60%"></div></td></tr>
+    </tbody>
+  </table>
+
+  <p class="vazio" id="vazio" hidden>Ninguém entregou esta semana ainda.</p>
+  <div class="falha" id="falha" hidden>
+    <span id="falha-texto"></span><br>
+    <button type="button" id="recarregar">Tentar de novo</button>
+  </div>
+
+  <p class="rodape">Os dados vêm da planilha de entregas. Reenvios substituem a entrega anterior da mesma semana.<br>Material de estudo da LAWD · UFS</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SEMANAS = window.LAWD_SEMANAS;
+  var normalizar = window.LAWD_NORMALIZAR_SEMANA;
+  var URL_SCRIPT = (window.LAWD_SCRIPT_URL || "").trim();
+  var CONFIGURADO = /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(URL_SCRIPT);
+
+  var $ = function(id){ return document.getElementById(id); };
+  var el = {
+    semana:$("semana"), entrega:$("entrega"), linhas:$("linhas"), tabela:$("tabela"),
+    total:$("total"), rotulo:$("total-rotulo"), atualizado:$("atualizado"),
+    vazio:$("vazio"), falha:$("falha"), falhaTexto:$("falha-texto"), recarregar:$("recarregar")
+  };
+  var entregas = null;
+
+  SEMANAS.forEach(function(s){
+    var o = document.createElement("option");
+    o.value = s.id;
+    o.textContent = "Semana " + s.id + " · " + s.tema;
+    el.semana.appendChild(o);
+  });
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  function semanaDaUrl(){
+    var m = location.hash.match(/semana=([\d.]+)/);
+    return m ? normalizar(decodeURIComponent(m[1])) : "";
+  }
+
+  function existe(id){ return SEMANAS.some(function(s){ return s.id === id; }); }
+
+  function dataCurta(iso){
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d)) return "";
+    return d.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" }) + " · " +
+           d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+  }
+
+  function desenhar(){
+    var id = el.semana.value;
+    var s = SEMANAS.filter(function(x){ return x.id === id; })[0];
+    el.entrega.innerHTML = s ? "Entrega esperada: <b>" + esc(s.entrega) + "</b>" : "";
+    try { history.replaceState(null, "", "#semana=" + id); } catch(e){}
+
+    if (!entregas) return;
+    var lista = entregas.filter(function(x){ return x.semana === id; })
+      .sort(function(a, b){ return a.nome.localeCompare(b.nome, "pt-BR"); });
+
+    el.total.textContent = lista.length;
+    el.rotulo.textContent = lista.length === 1 ? "entrega" : "entregas";
+    el.tabela.hidden = lista.length === 0;
+    el.vazio.hidden = lista.length !== 0;
+
+    el.linhas.innerHTML = lista.map(function(x, i){
+      var usuario = encodeURIComponent(x.github);
+      var repo = /^https:\/\/(www\.)?github\.com\//i.test(x.repositorio) ? x.repositorio : "";
+      var quando = dataCurta(x.enviadoEm);
+      if (x.envios > 1) quando += (quando ? " · " : "") + x.envios + " envios";
+      return '<tr>' +
+        '<td class="num">' + (i + 1) + '</td>' +
+        '<td><div class="aluno"><img src="https://github.com/' + usuario + '.png?size=64" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+          '<div><b>' + esc(x.nome) + '</b><a href="https://github.com/' + usuario + '" target="_blank" rel="noopener">@' + esc(x.github) + '</a></div></div></td>' +
+        '<td class="repo">' +
+          (repo ? '<a href="' + esc(repo) + '" target="_blank" rel="noopener">' + esc(repo.replace(/^https:\/\/(www\.)?github\.com\//i, "")) + '</a>' : '<span class="quando">sem link</span>') +
+          (quando ? '<span class="quando">' + esc(quando) + '</span>' : "") +
+        '</td></tr>';
+    }).join("");
+  }
+
+  function falhar(texto){
+    el.falha.hidden = false;
+    el.falhaTexto.textContent = texto;
+    el.tabela.hidden = true;
+    el.vazio.hidden = true;
+    el.total.textContent = "–";
+    el.atualizado.textContent = "sem dados";
+  }
+
+  function carregar(){
+    el.falha.hidden = true;
+    el.atualizado.textContent = "carregando…";
+    if (!CONFIGURADO) { falhar("A URL da planilha ainda não foi configurada em config.js."); return; }
+
+    fetch(URL_SCRIPT + "?acao=listar", { redirect:"follow" })
+      .then(function(r){
+        if (!r.ok) throw new Error("O servidor respondeu " + r.status + ".");
+        return r.json();
+      })
+      .then(function(res){
+        if (!res || !res.ok) throw new Error((res && res.erro) || "A planilha recusou a consulta.");
+        if (!Array.isArray(res.entregas)) throw new Error("O Apps Script publicado ainda não tem a ação de listar entregas. Atualize o código e publique uma nova versão.");
+        // uma linha por aluno e semana: se sobrou 1.1 e 1.2, vale a mais recente
+        var porChave = {};
+        res.entregas.forEach(function(x){
+          var e = {
+            nome: String(x.nome || ""), github: String(x.github || ""),
+            semana: normalizar(x.semana), repositorio: String(x.repositorio || ""),
+            enviadoEm: x.enviadoEm || "", envios: Number(x.envios) || 1
+          };
+          var chave = e.github.toLowerCase() + "|" + e.semana;
+          var atual = porChave[chave];
+          if (!atual || e.enviadoEm > atual.enviadoEm) porChave[chave] = e;
+        });
+        entregas = Object.keys(porChave).map(function(k){ return porChave[k]; });
+        el.atualizado.textContent = "atualizado às " +
+          new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+
+        // sem semana na URL: abre na semana mais recente que já tem entrega
+        if (!escolhida) {
+          var comEntrega = SEMANAS.filter(function(s){
+            return entregas.some(function(x){ return x.semana === s.id; });
+          });
+          if (comEntrega.length) el.semana.value = comEntrega[comEntrega.length - 1].id;
+        }
+        desenhar();
+      })
+      .catch(function(err){
+        falhar(err.message || "Falha de rede. Verifique sua conexão e tente de novo.");
+      });
+  }
+
+  var inicial = semanaDaUrl();
+  var escolhida = existe(inicial);
+  if (escolhida) el.semana.value = inicial;
+  el.semana.addEventListener("change", function(){ escolhida = true; desenhar(); });
+  el.recarregar.addEventListener("click", carregar);
+  window.addEventListener("hashchange", function(){
+    var id = semanaDaUrl();
+    if (existe(id) && id !== el.semana.value) { escolhida = true; el.semana.value = id; desenhar(); }
+  });
+
+  desenhar();
+  carregar();
+})();
+</script>
+</body>
+</html>

@@ -8,11 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@300;400;500;600;700&family=Saira:wght@400;500;600&display=swap" rel="stylesheet">
-<script>
-  /* CONFIGURAÇÃO: cole aqui a URL do Web App do Apps Script (termina em /exec).
-     Enquanto estiver vazia, o site roda em modo demonstração e nada é gravado. */
-  window.LAWD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnjuCBtpqLQhB3xTibVrvcCnIKBakOj9yek-RtHU59OdsREFr5aU-kkRuGDklszS4p/exec";
-</script>
+<script src="config.js"></script>
 <style>
 @font-face{font-family:"Makina";src:local("29LT Makina Regular"),local("29LTMakina-Regular"),local("29LT Makina");font-weight:400;font-display:swap}
 @font-face{font-family:"Makina";src:local("29LT Makina Medium"),local("29LTMakina-Medium");font-weight:500;font-display:swap}
@@ -186,6 +182,7 @@ form[hidden]{display:none}
 .demo[hidden]{display:none}
 
 .rodape{margin-top:2.5rem;font-family:var(--maquina);font-size:.72rem;color:var(--suave);line-height:1.6}
+.rodape a{color:var(--acento);font-size:.85rem;text-underline-offset:3px}
 
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important}
@@ -272,6 +269,7 @@ form[hidden]{display:none}
   </section>
 
   <p class="rodape">
+    <a href="quem-entregou.html">Ver quem já entregou →</a><br>
     Problemas com o envio? Fale com a coordenação da LAWD.<br>
     Material de estudo da LAWD · UFS
   </p>
@@ -281,21 +279,7 @@ form[hidden]{display:none}
 (function(){
   "use strict";
 
-  var SEMANAS = [
-    { id:"0",   tema:"Fundamentos da Web", entrega:"Mapa visual ou diagrama explicando o caminho de uma requisição." },
-    { id:"1.1", tema:"HTML e ambiente de desenvolvimento", entrega:"Mini site com pelo menos duas páginas conectadas." },
-    { id:"1.2", tema:"CSS, layout e responsividade", entrega:"Versão responsiva do mini site iniciado na semana anterior." },
-    { id:"2.1", tema:"JavaScript essencial", entrega:"Pequenas regras de interação aplicadas ao site." },
-    { id:"2.2", tema:"DOM e eventos", entrega:"Aplicação de lista de tarefas com criação, conclusão e remoção de itens." },
-    { id:"3",   tema:"Git, GitHub e trabalho em equipe", entrega:"Projeto em equipe versionado, com histórico de commits e divisão de tarefas." },
-    { id:"4",   tema:"APIs e requisições HTTP", entrega:"Aplicação que consome dados externos e apresenta informações ao usuário." },
-    { id:"5",   tema:"Autenticação e acesso", entrega:"Fluxo de login simulado ou funcional integrado ao projeto." },
-    { id:"6",   tema:"Figma e prototipagem", entrega:"Protótipo navegável de uma aplicação curta." },
-    { id:"7",   tema:"Componentização", entrega:"Refatoração de parte do projeto usando componentes reutilizáveis." },
-    { id:"8",   tema:"Testes e verificação", entrega:"Testes ou roteiro de validação para os fluxos principais." },
-    { id:"9",   tema:"MCP e ferramentas de IA", entrega:"Um MCP próprio, um agente que chama uma tool dele e a integração de um MCP de terceiros." },
-    { id:"10",  tema:"Revisão, code review e projeto final", entrega:"Mini POC final apresentada e registrada no GitHub." }
-  ];
+  var SEMANAS = window.LAWD_SEMANAS;
 
   var URL_SCRIPT = (window.LAWD_SCRIPT_URL || "").trim();
   var MODO_DEMO = !/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(URL_SCRIPT);
