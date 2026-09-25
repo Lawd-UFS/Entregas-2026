@@ -1,6 +1,6 @@
 /* CONFIGURAÇÃO: cole aqui a URL do Web App do Apps Script (termina em /exec).
      Enquanto estiver vazia, o site roda em modo demonstração e nada é gravado. */
-  window.LAWD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnjuCBtpqLQhB3xTibVrvcCnIKBakOj9yek-RtHU59OdsREFr5aU-kkRuGDklszS4p/exec";
+  window.LAWD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2nujpNBFYOX5gfXkG0zVYJ6Qfc2dAbnRcO8DQOTs24Xo8Krh8YF0URzifyixW79Oz/exec";
 
 /* Semanas do cronograma da LAWD, compartilhadas entre as páginas. */
 window.LAWD_SEMANAS = [
