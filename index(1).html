@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entrega de atividades — LAWD UFS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%236a18e0'/><text x='16' y='21' font-size='11' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'>LAWD</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@300;400;500;600;700&family=Saira:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  /* CONFIGURAÇÃO: cole aqui a URL do Web App do Apps Script (termina em /exec).
+     Enquanto estiver vazia, o site roda em modo demonstração e nada é gravado. */
+  window.LAWD_SCRIPT_URL = "";
+</script>
+<style>
+@font-face{font-family:"Makina";src:local("29LT Makina Regular"),local("29LTMakina-Regular"),local("29LT Makina");font-weight:400;font-display:swap}
+@font-face{font-family:"Makina";src:local("29LT Makina Medium"),local("29LTMakina-Medium");font-weight:500;font-display:swap}
+
+/* ---------- tokens (mesmos do material LAWD) ---------- */
+:root{
+  --bg:#ffffff; --fg:#000000; --suave:#4a4356; --superficie:#f3edfe;
+  --linha:rgba(20,0,48,.16); --acento:#6a18e0; --acento-forte:#5310b8;
+  --sobre-acento:#ffffff; --maquina-bg:#0b0114; --maquina-fg:#ffffff;
+  --maquina-linha:rgba(255,255,255,.14); --ok:#00d18f; --erro:#d0244f;
+  --humana:"MuseoModerno", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --maquina:"Makina", "Saira", ui-sans-serif, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#000000; --fg:#ffffff; --suave:#a897c4; --superficie:#150827;
+    --linha:rgba(255,255,255,.18); --acento:#8b3bff; --acento-forte:#a06bff;
+    --maquina-bg:#0d0518; --maquina-linha:rgba(255,255,255,.16); --erro:#ff6b8f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --fg:#ffffff; --suave:#a897c4; --superficie:#150827;
+  --linha:rgba(255,255,255,.18); --acento:#8b3bff; --acento-forte:#a06bff;
+  --maquina-bg:#0d0518; --maquina-linha:rgba(255,255,255,.16); --erro:#ff6b8f;
+}
+
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:var(--humana);font-weight:400;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.folha{max-width:34rem;margin:0 auto;padding:0 1.25rem 4rem}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acento-forte);outline-offset:3px;border-radius:2px}
+
+/* ---------- topo ---------- */
+.topo{display:flex;align-items:center;gap:.6rem;padding:1.4rem 0 2.6rem}
+.marca{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--acento);color:var(--sobre-acento);
+  font-weight:700;font-size:.95rem;letter-spacing:.06em;
+  padding:.3rem .55rem .35rem;border-radius:.3rem;
+}
+.topo p{margin:0;font-family:var(--maquina);font-size:.76rem;line-height:1.3;color:var(--suave)}
+
+/* ---------- abertura ---------- */
+h1{
+  font-weight:600;font-size:clamp(2rem,9vw,2.7rem);line-height:1.02;
+  letter-spacing:-.02em;margin:0 0 1rem;
+}
+.abertura p{margin:0 0 2rem;font-size:1.05rem;color:var(--suave);max-width:32ch}
+
+/* ---------- formulário ---------- */
+form{display:grid;gap:1.35rem}
+form[hidden]{display:none}
+.campo{display:grid;gap:.4rem}
+.campo > label{font-weight:500;font-size:1rem}
+.dica{margin:0;font-size:.85rem;color:var(--suave)}
+.caixa{
+  display:flex;align-items:center;gap:.45rem;
+  background:var(--superficie);border:1px solid var(--linha);
+  border-radius:.75rem;padding:0 .85rem;min-height:3rem;
+  transition:border-color .15s ease;
+}
+.caixa:focus-within{border-color:var(--acento);box-shadow:0 0 0 1px var(--acento)}
+.caixa[data-estado="erro"]{border-color:var(--erro)}
+.prefixo{font-family:var(--maquina);font-size:.85rem;color:var(--suave);flex:0 0 auto}
+.caixa input,.caixa select{
+  flex:1 1 auto;min-width:0;background:none;border:0;padding:.7rem 0;
+  font-size:1rem;
+}
+.caixa input.tecnico{font-family:var(--maquina);font-size:.95rem}
+.caixa input::placeholder{color:var(--suave);opacity:.7}
+.caixa input:focus,.caixa select:focus{outline:none}
+.caixa select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:1.4rem}
+.caixa--select{position:relative}
+.caixa--select::after{
+  content:"";position:absolute;right:1rem;top:50%;width:.45rem;height:.45rem;
+  border-right:2px solid var(--suave);border-bottom:2px solid var(--suave);
+  transform:translateY(-70%) rotate(45deg);pointer-events:none;
+}
+.caixa select option{background:var(--bg);color:var(--fg)}
+.avatar{
+  width:1.9rem;height:1.9rem;border-radius:50%;flex:0 0 auto;
+  background:var(--linha);object-fit:cover;display:none;
+}
+.avatar[data-ok="1"]{display:block}
+.aviso{margin:0;font-size:.82rem;min-height:0}
+.aviso:empty{display:none}
+.aviso[data-tipo="erro"]{color:var(--erro)}
+.aviso[data-tipo="alerta"]{color:var(--suave)}
+
+/* entrega da semana escolhida */
+.entrega{
+  margin:.25rem 0 0;border-left:2px solid var(--acento);
+  padding:.15rem 0 .15rem .75rem;font-size:.88rem;color:var(--suave);
+}
+.entrega b{color:var(--fg);font-weight:600}
+.entrega[hidden]{display:none}
+
+/* honeypot anti-spam */
+.pote{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* ---------- console (a requisição) ---------- */
+.maquina{
+  background:var(--maquina-bg);color:var(--maquina-fg);
+  border-radius:.65rem;padding:.8rem .9rem;
+  font-family:var(--maquina);font-size:.78rem;line-height:1.7;
+  overflow-x:auto;
+}
+.maquina-topo{
+  display:flex;justify-content:space-between;align-items:center;
+  color:#cbb8e8;font-size:.7rem;margin-bottom:.35rem;
+  border-bottom:1px solid var(--maquina-linha);padding-bottom:.4rem;
+}
+.maquina pre{margin:0;font:inherit;white-space:pre}
+.m-metodo{color:#c79bff;font-weight:500}
+.m-cabecalho{color:#cbb8e8}
+.m-chave{color:#cbb8e8}
+.m-valor{color:#fff}
+.m-vazio{color:#6f5f8c}
+.m-ok{color:var(--ok);font-weight:500}
+.m-erro{color:#ff6b8f;font-weight:500}
+.resposta{border-top:1px solid var(--maquina-linha);margin-top:.5rem;padding-top:.5rem}
+.resposta[hidden]{display:none}
+
+/* ---------- botão ---------- */
+.enviar{
+  display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+  width:100%;cursor:pointer;border:0;
+  background:var(--acento);color:var(--sobre-acento);
+  font-weight:500;font-size:1.05rem;padding:.85rem 1.1rem;border-radius:.75rem;
+  position:relative;overflow:hidden;
+}
+.enviar:hover{background:var(--acento-forte)}
+.enviar:active{transform:translateY(1px)}
+.enviar[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.enviar .carga{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--sobre-acento);opacity:.6}
+.enviar[data-carregando="1"] .carga{animation:carga 1.6s ease-in-out infinite}
+@keyframes carga{0%{width:0;left:0}50%{width:60%;left:20%}100%{width:0;left:100%}}
+
+.estado{
+  margin:.1rem .2rem 0;font-family:var(--maquina);font-size:.74rem;color:var(--suave);
+  display:flex;align-items:center;gap:.45rem;
+}
+.ponto{width:6px;height:6px;border-radius:50%;background:var(--acento);flex:0 0 auto}
+.ponto[data-cor="ok"]{background:var(--ok)}
+.ponto[data-cor="erro"]{background:var(--erro)}
+
+/* ---------- confirmação ---------- */
+.feito{
+  border:1px solid var(--acento);box-shadow:0 0 0 1px var(--acento);
+  border-radius:1rem;padding:1.2rem 1.1rem;
+}
+.feito[hidden]{display:none}
+.feito h2{margin:0 0 .35rem;font-weight:600;font-size:1.3rem;line-height:1.15;letter-spacing:-.01em}
+.feito p{margin:0 0 1rem;color:var(--suave);font-size:.95rem}
+.feito p b{color:var(--fg);font-weight:600}
+.secundaria{
+  cursor:pointer;background:none;border:1px solid var(--acento);color:var(--acento);
+  font-weight:500;font-size:.95rem;padding:.55rem 1rem;border-radius:.6rem;
+}
+
+.demo{
+  font-family:var(--maquina);font-size:.74rem;color:var(--suave);
+  border:1px dashed var(--linha);border-radius:.6rem;padding:.55rem .75rem;margin:0 0 1.6rem;
+}
+.demo[hidden]{display:none}
+
+.rodape{margin-top:2.5rem;font-family:var(--maquina);font-size:.72rem;color:var(--suave);line-height:1.6}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="folha">
+
+  <header class="topo">
+    <span class="marca">LAWD</span>
+    <p>Liga Acadêmica de<br>Desenvolvimento Web</p>
+  </header>
+
+  <section class="abertura">
+    <h1>Entregue a atividade da semana</h1>
+    <p>Seu nome, seu usuário do GitHub e o link do repositório. Se você enviar de novo para a mesma semana, a entrega anterior é substituída.</p>
+  </section>
+
+  <p class="demo" id="demo" hidden>Modo demonstração: a URL da planilha ainda não foi configurada, então nada será gravado.</p>
+
+  <form id="form" novalidate>
+
+    <div class="campo">
+      <label for="nome">Nome completo</label>
+      <div class="caixa" id="caixa-nome">
+        <input id="nome" name="nome" type="text" autocomplete="name" placeholder="Maria da Silva" required maxlength="120">
+      </div>
+      <p class="aviso" id="aviso-nome"></p>
+    </div>
+
+    <div class="campo">
+      <label for="github">Usuário do GitHub</label>
+      <div class="caixa" id="caixa-github">
+        <span class="prefixo">github.com/</span>
+        <input id="github" name="github" class="tecnico" type="text" autocomplete="username"
+               autocapitalize="off" spellcheck="false" placeholder="mariasilva" required maxlength="39">
+        <img class="avatar" id="avatar" alt="">
+      </div>
+      <p class="aviso" id="aviso-github"></p>
+    </div>
+
+    <div class="campo">
+      <label for="semana">Semana</label>
+      <div class="caixa caixa--select" id="caixa-semana">
+        <select id="semana" name="semana" required>
+          <option value="">Escolha a semana da atividade</option>
+        </select>
+      </div>
+      <p class="entrega" id="entrega" hidden></p>
+      <p class="aviso" id="aviso-semana"></p>
+    </div>
+
+    <div class="campo">
+      <label for="repositorio">Link do repositório</label>
+      <div class="caixa" id="caixa-repo">
+        <input id="repositorio" name="repositorio" class="tecnico" type="url" inputmode="url"
+               autocapitalize="off" spellcheck="false" placeholder="https://github.com/mariasilva/mini-site" required>
+      </div>
+      <p class="aviso" id="aviso-repo"></p>
+    </div>
+
+    <div class="pote" aria-hidden="true">
+      <label for="site">Não preencha</label>
+      <input id="site" name="site" type="text" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="maquina" aria-label="Prévia da requisição que será enviada">
+      <div class="maquina-topo"><span>sua entrega, como requisição HTTP</span><span id="tamanho">0 B</span></div>
+      <pre id="requisicao"></pre>
+      <pre class="resposta" id="resposta" hidden></pre>
+    </div>
+
+    <div>
+      <button class="enviar" id="enviar" type="submit">Enviar entrega<span class="carga"></span></button>
+      <p class="estado" id="estado"><span class="ponto" id="ponto"></span><span id="estado-texto">preencha os quatro campos</span></p>
+    </div>
+  </form>
+
+  <section class="feito" id="feito" hidden aria-live="polite">
+    <h2 id="feito-titulo">Entrega recebida</h2>
+    <p id="feito-texto"></p>
+    <button class="secundaria" id="nova" type="button">Enviar outra atividade</button>
+  </section>
+
+  <p class="rodape">
+    Problemas com o envio? Fale com a coordenação da LAWD.<br>
+    Material de estudo da LAWD · UFS
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SEMANAS = [
+    { id:"0",   tema:"Fundamentos da Web", entrega:"Mapa visual ou diagrama explicando o caminho de uma requisição." },
+    { id:"1.1", tema:"HTML e ambiente de desenvolvimento", entrega:"Mini site com pelo menos duas páginas conectadas." },
+    { id:"1.2", tema:"CSS, layout e responsividade", entrega:"Versão responsiva do mini site iniciado na semana anterior." },
+    { id:"2.1", tema:"JavaScript essencial", entrega:"Pequenas regras de interação aplicadas ao site." },
+    { id:"2.2", tema:"DOM e eventos", entrega:"Aplicação de lista de tarefas com criação, conclusão e remoção de itens." },
+    { id:"3",   tema:"Git, GitHub e trabalho em equipe", entrega:"Projeto em equipe versionado, com histórico de commits e divisão de tarefas." },
+    { id:"4",   tema:"APIs e requisições HTTP", entrega:"Aplicação que consome dados externos e apresenta informações ao usuário." },
+    { id:"5",   tema:"Autenticação e acesso", entrega:"Fluxo de login simulado ou funcional integrado ao projeto." },
+    { id:"6",   tema:"Figma e prototipagem", entrega:"Protótipo navegável de uma aplicação curta." },
+    { id:"7",   tema:"Componentização", entrega:"Refatoração de parte do projeto usando componentes reutilizáveis." },
+    { id:"8",   tema:"Testes e verificação", entrega:"Testes ou roteiro de validação para os fluxos principais." },
+    { id:"9",   tema:"MCP e ferramentas de IA", entrega:"Um MCP próprio, um agente que chama uma tool dele e a integração de um MCP de terceiros." },
+    { id:"10",  tema:"Revisão, code review e projeto final", entrega:"Mini POC final apresentada e registrada no GitHub." }
+  ];
+
+  var URL_SCRIPT = (window.LAWD_SCRIPT_URL || "").trim();
+  var MODO_DEMO = !/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(URL_SCRIPT);
+
+  var RE_USUARIO = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/;
+  var RE_REPO = /^https?:\/\/(?:www\.)?github\.com\/([A-Za-z0-9](?:[A-Za-z0-9-]{0,38}))\/([A-Za-z0-9._-]+?)(?:\.git)?\/?(?:[#?].*)?$/i;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var el = {
+    form:$("form"), nome:$("nome"), github:$("github"), semana:$("semana"),
+    repo:$("repositorio"), site:$("site"), avatar:$("avatar"), entrega:$("entrega"),
+    req:$("requisicao"), resp:$("resposta"), tam:$("tamanho"), enviar:$("enviar"),
+    ponto:$("ponto"), estado:$("estado-texto"), feito:$("feito"),
+    feitoTitulo:$("feito-titulo"), feitoTexto:$("feito-texto"), nova:$("nova"), demo:$("demo")
+  };
+  var tocado = { nome:false, github:false, semana:false, repo:false };
+  var usuarioSumido = "";
+
+  if (MODO_DEMO) el.demo.hidden = false;
+
+  // monta o select
+  SEMANAS.forEach(function(s){
+    var o = document.createElement("option");
+    o.value = s.id;
+    o.textContent = "Semana " + s.id + " · " + s.tema;
+    el.semana.appendChild(o);
+  });
+
+  // lembra nome e usuário deste navegador (conveniência)
+  try {
+    var salvo = JSON.parse(localStorage.getItem("lawd-aluno") || "null");
+    if (salvo) { el.nome.value = salvo.nome || ""; el.github.value = salvo.github || ""; }
+  } catch(e){}
+
+  function semanaAtual(){
+    for (var i=0;i<SEMANAS.length;i++) if (SEMANAS[i].id === el.semana.value) return SEMANAS[i];
+    return null;
+  }
+
+  function limparUsuario(v){
+    return v.trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?github\.com\//i, "").replace(/\/.*$/, "");
+  }
+
+  function dados(){
+    var s = semanaAtual();
+    return {
+      nome: el.nome.value.trim().replace(/\s+/g, " "),
+      github: limparUsuario(el.github.value),
+      semana: el.semana.value,
+      tema: s ? s.tema : "",
+      repositorio: el.repo.value.trim()
+    };
+  }
+
+  function validar(d){
+    var e = {};
+    if (d.nome.length < 3) e.nome = "Escreva seu nome completo.";
+    else if (d.nome.split(" ").length < 2) e.nome = "Inclua pelo menos nome e sobrenome.";
+
+    if (!d.github) e.github = "Informe seu usuário do GitHub.";
+    else if (!RE_USUARIO.test(d.github)) e.github = "Usuário inválido: use só letras, números e hífens (sem espaços).";
+
+    if (!d.semana) e.semana = "Escolha a semana desta entrega.";
+
+    var m = d.repositorio.match(RE_REPO);
+    if (!d.repositorio) e.repo = "Cole o link do repositório.";
+    else if (!m) e.repo = "O link precisa ter o formato https://github.com/usuario/repositorio.";
+    return { erros:e, match:m };
+  }
+
+  function aviso(campo, caixa, texto, tipo){
+    var a = $("aviso-" + campo);
+    a.textContent = texto || "";
+    a.dataset.tipo = tipo || "";
+    $("caixa-" + caixa).dataset.estado = (tipo === "erro") ? "erro" : "";
+  }
+
+  function esc(s){ return s.replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  function linhaJson(chave, valor, ultima){
+    var v = valor ? '<span class="m-valor">"' + esc(valor) + '"</span>' : '<span class="m-vazio">""</span>';
+    return '  <span class="m-chave">"' + chave + '"</span>: ' + v + (ultima ? "" : ",");
+  }
+
+  function atualizar(){
+    var d = dados();
+    var v = validar(d);
+
+    // semana escolhida → mostra o que se espera
+    var s = semanaAtual();
+    if (s) { el.entrega.hidden = false; el.entrega.innerHTML = "Entrega esperada: <b>" + esc(s.entrega) + "</b>"; }
+    else el.entrega.hidden = true;
+
+    aviso("nome", "nome", tocado.nome ? v.erros.nome : "", v.erros.nome ? "erro" : "");
+    if (tocado.github && v.erros.github) aviso("github", "github", v.erros.github, "erro");
+    else if (d.github && usuarioSumido === d.github) aviso("github", "github", "Não encontramos @" + d.github + " no GitHub. Confira a grafia antes de enviar.", "alerta");
+    else aviso("github", "github", "", "");
+    aviso("semana", "semana", tocado.semana ? v.erros.semana : "", v.erros.semana ? "erro" : "");
+
+    if (tocado.repo && v.erros.repo) aviso("repo", "repo", v.erros.repo, "erro");
+    else if (v.match && d.github && v.match[1].toLowerCase() !== d.github.toLowerCase())
+      aviso("repo", "repo", "Esse repositório é de @" + v.match[1] + ", não de @" + d.github + ". Tudo bem se for um projeto em equipe.", "alerta");
+    else aviso("repo", "repo", "", "");
+
+    // console
+    var host = MODO_DEMO ? "script.google.com" : URL_SCRIPT.replace(/^https:\/\//, "").split("/")[0];
+    var corpo = JSON.stringify(d, null, 2);
+    var bytes = new Blob([corpo]).size;
+    el.tam.textContent = bytes + " B";
+    el.req.innerHTML =
+      '<span class="m-metodo">POST</span> /macros/…/exec HTTP/1.1\n' +
+      '<span class="m-cabecalho">Host: ' + host + '\nContent-Type: text/plain;charset=utf-8</span>\n\n{\n' +
+      linhaJson("nome", d.nome) + "\n" +
+      linhaJson("github", d.github) + "\n" +
+      linhaJson("semana", d.semana) + "\n" +
+      linhaJson("tema", d.tema) + "\n" +
+      linhaJson("repositorio", d.repositorio, true) + "\n}";
+
+    var n = Object.keys(v.erros).length;
+    el.enviar.disabled = n > 0;
+    estado(n > 0 ? (n === 1 ? "falta 1 campo" : "faltam " + n + " campos") : "pronto para enviar", n > 0 ? "" : "ok");
+    return { d:d, ok:n === 0 };
+  }
+
+  function estado(texto, cor){ el.estado.textContent = texto; el.ponto.dataset.cor = cor || ""; }
+
+  // avatar do GitHub
+  var ultimoAvatar = "";
+  function carregarAvatar(){
+    var u = limparUsuario(el.github.value);
+    if (u === ultimoAvatar) return;
+    ultimoAvatar = u;
+    el.avatar.dataset.ok = "0";
+    if (!RE_USUARIO.test(u)) return;
+    usuarioSumido = "";
+    el.avatar.onload = function(){ if (ultimoAvatar === u) el.avatar.dataset.ok = "1"; };
+    el.avatar.onerror = function(){
+      if (ultimoAvatar !== u) return;
+      usuarioSumido = u;
+      atualizar();
+    };
+    el.avatar.src = "https://github.com/" + encodeURIComponent(u) + ".png?size=64";
+  }
+
+  [["nome","nome"],["github","github"],["semana","semana"],["repositorio","repo"]].forEach(function(p){
+    var campo = el[p[1] === "repo" ? "repo" : p[1]];
+    campo.addEventListener("input", atualizar);
+    campo.addEventListener("change", function(){ tocado[p[1]] = true; atualizar(); });
+    campo.addEventListener("blur", function(){
+      tocado[p[1]] = campo.value.trim() !== "" || tocado[p[1]];
+      if (p[1] === "github") { el.github.value = limparUsuario(el.github.value); carregarAvatar(); }
+      atualizar();
+    });
+  });
+
+  function mostrarResposta(status, texto, classe){
+    el.resp.hidden = false;
+    el.resp.innerHTML = '<span class="' + classe + '">HTTP/1.1 ' + status + '</span>\n<span class="m-valor">' + esc(texto) + '</span>';
+  }
+
+  function enviar(d){
+    if (MODO_DEMO) {
+      return new Promise(function(res){
+        setTimeout(function(){ res({ ok:true, acao:"criada", demo:true }); }, 900);
+      });
+    }
+    // text/plain evita o preflight CORS, que o Apps Script não responde
+    return fetch(URL_SCRIPT, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify(d),
+      redirect:"follow"
+    }).then(function(r){
+      if (!r.ok) throw new Error("O servidor respondeu " + r.status + ".");
+      return r.json();
+    });
+  }
+
+  el.form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    tocado = { nome:true, github:true, semana:true, repo:true };
+    var r = atualizar();
+    if (!r.ok) { estado("corrija os campos marcados", "erro"); return; }
+    if (el.site.value) return; // robô
+
+    try { localStorage.setItem("lawd-aluno", JSON.stringify({ nome:r.d.nome, github:r.d.github })); } catch(e){}
+
+    el.enviar.disabled = true;
+    el.enviar.dataset.carregando = "1";
+    el.enviar.firstChild.nodeValue = "Enviando…";
+    estado("enviando para a planilha…", "");
+    el.resp.hidden = true;
+
+    enviar(r.d).then(function(res){
+      if (!res || !res.ok) throw new Error((res && res.erro) || "A planilha recusou a entrega.");
+      var atualizada = res.acao === "atualizada";
+      mostrarResposta(atualizada ? "200 OK" : "201 Created",
+        atualizada ? "entrega da semana substituída" : "entrega registrada", "m-ok");
+      estado(res.demo ? "simulado (modo demonstração)" : "gravado na planilha", "ok");
+
+      el.feitoTitulo.textContent = atualizada ? "Entrega atualizada" : "Entrega recebida";
+      el.feitoTexto.innerHTML = "Semana <b>" + esc(r.d.semana) + "</b> de <b>@" + esc(r.d.github) + "</b>, apontando para <b>" +
+        esc(r.d.repositorio.replace(/^https?:\/\/(www\.)?/, "")) + "</b>." +
+        (atualizada ? " A versão anterior foi substituída." : "");
+      el.form.hidden = true;
+      el.feito.hidden = false;
+      el.feito.querySelector("button").focus();
+    }).catch(function(err){
+      mostrarResposta("erro", err.message || "Falha de rede. Verifique sua conexão e tente de novo.", "m-erro");
+      estado("não foi enviado, tente de novo", "erro");
+    }).then(function(){
+      el.enviar.dataset.carregando = "0";
+      el.enviar.firstChild.nodeValue = "Enviar entrega";
+      el.enviar.disabled = false;
+    });
+  });
+
+  el.nova.addEventListener("click", function(){
+    el.semana.value = ""; el.repo.value = "";
+    tocado.semana = false; tocado.repo = false;
+    el.resp.hidden = true;
+    el.feito.hidden = true; el.form.hidden = false;
+    atualizar();
+    el.semana.focus();
+  });
+
+  carregarAvatar();
+  atualizar();
+})();
+</script>
+</body>
+</html>
