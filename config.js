@@ -6,7 +6,7 @@
 window.LAWD_SEMANAS = [
   { id:"0",  tema:"Fundamentos da Web", entrega:"Mapa visual ou diagrama explicando o caminho de uma requisição." },
   { id:"1",  tema:"HTML, CSS e responsividade", entrega:"Mini site responsivo com pelo menos duas páginas conectadas." },
-  { id:"2",  tema:"JavaScript, DOM e eventos", entrega:"Aplicação de lista de tarefas com criação, conclusão e remoção de itens." },
+  { id:"2",  tema:"JavaScript, DOM e eventos", entrega:"Inserção livre de DOM  e JS em seu site HTML." },
   { id:"3",  tema:"Git, GitHub e trabalho em equipe", entrega:"Projeto em equipe versionado, com histórico de commits e divisão de tarefas." },
   { id:"4",  tema:"APIs e requisições HTTP", entrega:"Aplicação que consome dados externos e apresenta informações ao usuário." },
   { id:"5",  tema:"Autenticação e acesso", entrega:"Fluxo de login simulado ou funcional integrado ao projeto." },
