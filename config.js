@@ -8,6 +8,7 @@ window.LAWD_SEMANAS = [
   { id:"1",  tema:"HTML, CSS e responsividade", entrega:"Mini site responsivo com pelo menos duas páginas conectadas." },
   { id:"2",  tema:"JavaScript, DOM e eventos", entrega:"Inserção livre de DOM  e JS em seu site HTML." },
   { id:"3",  tema:"Git, GitHub e trabalho em equipe", entrega:"Projeto em equipe versionado, com histórico de commits e divisão de tarefas." },
+  { id:"3.2", tema:"Projeto do mistério", entrega:"Código em JavaScript (.js) ou Python (.py) que codifica uma palavra, como no projeto do mistério: https://lawd.up.railway.app/." },
   { id:"4",  tema:"APIs e requisições HTTP", entrega:"Aplicação que consome dados externos e apresenta informações ao usuário." },
   { id:"5",  tema:"Autenticação e acesso", entrega:"Fluxo de login simulado ou funcional integrado ao projeto." },
   { id:"6",  tema:"Figma e prototipagem", entrega:"Protótipo navegável de uma aplicação curta." },
@@ -19,5 +20,5 @@ window.LAWD_SEMANAS = [
 
 /* Entregas antigas foram gravadas como 1.1/1.2 e 2.1/2.2; hoje contam como a semana inteira. */
 window.LAWD_NORMALIZAR_SEMANA = function(id){
-  return String(id == null ? "" : id).trim().replace(/^(\d+)\.\d+$/, "$1");
+  return String(id == null ? "" : id).trim().replace(/^([12])\.[12]$/, "$1");
 };

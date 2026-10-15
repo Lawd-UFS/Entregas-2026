@@ -11,13 +11,13 @@
 var NOME_ABA = "Entregas";
 var CABECALHO = ["Enviado em", "Nome", "GitHub", "Semana", "Tema", "Repositório", "Envios"];
 
-var SEMANAS_VALIDAS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+var SEMANAS_VALIDAS = ["0", "1", "2", "3", "3.2", "4", "5", "6", "7", "8", "9", "10"];
 var RE_USUARIO = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/;
 var RE_REPO = /^https?:\/\/(?:www\.)?github\.com\/[A-Za-z0-9][A-Za-z0-9-]{0,38}\/[A-Za-z0-9._-]+\/?(?:[#?].*)?$/i;
 
 // As semanas 1 e 2 já foram divididas em 1.1/1.2 e 2.1/2.2; hoje cada uma é uma entrega só.
 function normalizarSemana(s) {
-  return String(s == null ? "" : s).trim().replace(/^(\d+)\.\d+$/, "$1");
+  return String(s == null ? "" : s).trim().replace(/^([12])\.[12]$/, "$1");
 }
 
 function doPost(e) {
